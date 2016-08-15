@@ -19,6 +19,7 @@
 	
 	var currentWord;
 	var lettersGuessed;
+	var formattedLettersGuessed;
 	var remaining;
 	var userInput;
 	var guessedWord;
@@ -31,7 +32,7 @@
 			// check to ensure user guess is not a repeat
 			var isNew = true;
 			var letterFound = false;
-			for(var i = 0; i < guessedWord.length; i++) {
+			for(var i = 0; i < lettersGuessed.length; i++) {
 				if (lettersGuessed.charAt(i) === userInput) {
 					isNew = false;
 				}
@@ -39,10 +40,12 @@
 
 			// update remaining guesses, letters guessed, and guessed word
 			if (isNew) {
-				if (lettersGuessed.length === 0) {
+				if (formattedLettersGuessed.length === 0) {
 					lettersGuessed = userInput;
+					formattedLettersGuessed = userInput;
 				} else {
-					lettersGuessed = lettersGuessed + ", " + userInput;
+					formattedLettersGuessed = formattedLettersGuessed + ", " + userInput;
+					lettersGuessed = lettersGuessed + userInput;
 				}
 				for(var i = 0; i < currentWord.length; i++) {
 					if (currentWord.charAt(i) === userInput) {
@@ -60,7 +63,7 @@
 			var formattedGuess = "";
 			document.getElementById("wins").innerHTML = "wins: " + wins;
 			document.getElementById("remaining").innerHTML = "guesses remaining: " + remaining;
-			document.getElementById("lettersguessed").innerHTML = lettersGuessed;
+			document.getElementById("lettersguessed").innerHTML = formattedLettersGuessed;
 			for(var i = 0; i < guessedWord.length; i++) {
 				formattedGuess = formattedGuess + guessedWord.charAt(i) + " ";
 			}
@@ -83,6 +86,7 @@
 
 		newGame: function() {
 			lettersGuessed = "";
+			formattedLettersGuessed = "";
 			remaining = 13;
 			guessedWord = "";
 			if (wins === 0) {
@@ -98,7 +102,7 @@
 		}
 	}
 
-	String.prototype.replaceAt=function(index, character) {
+	String.prototype.replaceAt = function(index, character) {
     	return this.substr(0, index) + character + this.substr(index+character.length);
 	}
 
@@ -111,14 +115,12 @@
 
 	game.newGame();
 		
-		//do {
-			document.onkeyup = function(event) {
-				userInput = String.fromCharCode(event.keyCode).toLowerCase();
-				game.checkGuess();
-				game.checkForWin();
-				game.writeToScreen();
-			}
-		//	} while (wins < 3);
+	document.onkeyup = function(event) {
+		userInput = String.fromCharCode(event.keyCode).toLowerCase();
+		game.checkGuess();
+		game.checkForWin();
+		game.writeToScreen();
+	}
 	
 
 </script>
