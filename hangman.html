@@ -18,10 +18,10 @@
 <script type="text/javascript">
 	
 	var currentWord;
-	var lettersGuessed = "";
-	var remaining = 13;
+	var lettersGuessed;
+	var remaining;
 	var userInput;
-	var guessedWord = "";
+	var guessedWord;
 	var wins = 0;
 
 	var game = {
@@ -30,6 +30,7 @@
 
 			// check to ensure user guess is not a repeat
 			var isNew = true;
+			var letterFound = false;
 			for(var i = 0; i < guessedWord.length; i++) {
 				if (lettersGuessed.charAt(i) === userInput) {
 					isNew = false;
@@ -38,7 +39,6 @@
 
 			// update remaining guesses, letters guessed, and guessed word
 			if (isNew) {
-				remaining--;
 				if (lettersGuessed.length === 0) {
 					lettersGuessed = userInput;
 				} else {
@@ -47,7 +47,11 @@
 				for(var i = 0; i < currentWord.length; i++) {
 					if (currentWord.charAt(i) === userInput) {
 						guessedWord = guessedWord.replaceAt(i, userInput);
+						letterFound = true;
 					}
+				}
+				if (!letterFound) {
+					remaining--;
 				}
 			}
 		},
@@ -73,6 +77,23 @@
 
 			if (allMatch) {
 				wins++;
+				this.newGame();
+			}
+		},
+
+		newGame: function() {
+			lettersGuessed = "";
+			remaining = 13;
+			guessedWord = "";
+			if (wins === 0) {
+				currentWord = "outstanding";
+			} else if (wins === 1) {
+				currentWord = "fantastic";
+			} else {
+				currentWord = "extraordinary";
+			}
+			for(var i = 0; i < currentWord.length; i++) {
+				guessedWord = guessedWord.replaceAt(i, "_"); 
 			}
 		}
 	}
@@ -88,17 +109,17 @@
 		}
 	}
 
-	currentWord = "outstanding";
-	initializeGuessed();
-
-	document.onkeyup = function(event) {
-
-		userInput = String.fromCharCode(event.keyCode).toLowerCase();
-		game.checkGuess();
-		game.checkForWin();
-		game.writeToScreen();
-
-	}
+	game.newGame();
+		
+		//do {
+			document.onkeyup = function(event) {
+				userInput = String.fromCharCode(event.keyCode).toLowerCase();
+				game.checkGuess();
+				game.checkForWin();
+				game.writeToScreen();
+			}
+		//	} while (wins < 3);
+	
 
 </script>
 
