@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Hangman
+	</title>
+</head>
+<body>
+
+<div> Press any key to get started! </div> <br>
+<div id = "wins"> </div> <br>
+<div> current word </div> <br>
+<div id = "word"> </div> <br>
+<div id = "remaining"> </div> <br>
+<div> Letters already guessed: </div> <br>
+<div id = "lettersguessed"> </div> 
+
+<script type="text/javascript">
+	
+	var currentWord;
+	var lettersGuessed = "";
+	var remaining = 13;
+	var userInput;
+	var guessedWord = "";
+	var wins = 0;
+
+	var game = {
+
+		checkGuess: function() {
+
+			// check to ensure user guess is not a repeat
+			var isNew = true;
+			for(var i = 0; i < guessedWord.length; i++) {
+				if (lettersGuessed.charAt(i) === userInput) {
+					isNew = false;
+				}
+			}
+
+			// update remaining guesses, letters guessed, and guessed word
+			if (isNew) {
+				remaining--;
+				if (lettersGuessed.length === 0) {
+					lettersGuessed = userInput;
+				} else {
+					lettersGuessed = lettersGuessed + ", " + userInput;
+				}
+				for(var i = 0; i < currentWord.length; i++) {
+					if (currentWord.charAt(i) === userInput) {
+						guessedWord = guessedWord.replaceAt(i, userInput);
+					}
+				}
+			}
+		},
+
+		writeToScreen: function() {
+			var formattedGuess = "";
+			document.getElementById("wins").innerHTML = "wins: " + wins;
+			document.getElementById("remaining").innerHTML = "guesses remaining: " + remaining;
+			document.getElementById("lettersguessed").innerHTML = lettersGuessed;
+			for(var i = 0; i < guessedWord.length; i++) {
+				formattedGuess = formattedGuess + guessedWord.charAt(i) + " ";
+			}
+			document.getElementById("word").innerHTML = formattedGuess;
+		},
+
+		checkForWin: function() {
+			var allMatch = true;
+			for (var i = 0; i < currentWord.length; i++) {
+				if (currentWord.charAt(i) !== guessedWord[i]) {
+					allMatch = false;
+				}
+			}
+
+			if (allMatch) {
+				wins++;
+			}
+		}
+	}
+
+	String.prototype.replaceAt=function(index, character) {
+    	return this.substr(0, index) + character + this.substr(index+character.length);
+	}
+
+	function initializeGuessed() {
+		guessedWord = "";
+		for(var i = 0; i < currentWord.length; i++) {
+			guessedWord = guessedWord.replaceAt(i, "_"); 
+		}
+	}
+
+	currentWord = "outstanding";
+	initializeGuessed();
+
+	document.onkeyup = function(event) {
+
+		userInput = String.fromCharCode(event.keyCode).toLowerCase();
+		game.checkGuess();
+		game.checkForWin();
+		game.writeToScreen();
+
+	}
+
+</script>
+
+
+</body>
+</html>
