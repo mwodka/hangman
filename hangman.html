@@ -11,7 +11,7 @@
 <div id = "wins"> </div> <br>
 <div> current word </div> <br>
 <div id = "word"> </div> <br>
-<div id = "remaining"> </div> <br>
+<div id = "guessesRemaining"> </div> <br>
 <div> Letters already guessed: </div> <br>
 <div id = "lettersguessed"> </div> 
 
@@ -20,10 +20,11 @@
 	var currentWord;
 	var lettersGuessed;
 	var formattedLettersGuessed;
-	var remaining;
+	var guessesRemaining;
 	var userInput;
 	var guessedWord;
 	var wins = 0;
+	var wordBank = ['apple', 'orange', 'cherries', 'peaches', 'plums'];
 
 	var game = {
 
@@ -38,7 +39,7 @@
 				}
 			}
 
-			// update remaining guesses, letters guessed, and guessed word
+			// update guessesRemaining guesses, letters guessed, and guessed word
 			if (isNew) {
 				if (formattedLettersGuessed.length === 0) {
 					lettersGuessed = userInput;
@@ -54,7 +55,7 @@
 					}
 				}
 				if (!letterFound) {
-					remaining--;
+					guessesRemaining--;
 				}
 			}
 		},
@@ -62,7 +63,7 @@
 		writeToScreen: function() {
 			var formattedGuess = "";
 			document.getElementById("wins").innerHTML = "wins: " + wins;
-			document.getElementById("remaining").innerHTML = "guesses remaining: " + remaining;
+			document.getElementById("guessesRemaining").innerHTML = "guesses remaining: " + guessesRemaining;
 			document.getElementById("lettersguessed").innerHTML = formattedLettersGuessed;
 			for(var i = 0; i < guessedWord.length; i++) {
 				formattedGuess = formattedGuess + guessedWord.charAt(i) + " ";
@@ -70,7 +71,7 @@
 			document.getElementById("word").innerHTML = formattedGuess;
 		},
 
-		checkForWin: function() {
+		checkForWinOrLose: function() {
 			var allMatch = true;
 			for (var i = 0; i < currentWord.length; i++) {
 				if (currentWord.charAt(i) !== guessedWord[i]) {
@@ -82,20 +83,22 @@
 				wins++;
 				this.newGame();
 			}
+
+			if (guessesRemaining === 0) {
+				alert("Game Over. Press Close to start a new game.");
+				this.newGame();
+			}
+
 		},
 
 		newGame: function() {
+
+			currentWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+			console.log("currentWord = " + currentWord);
 			lettersGuessed = "";
 			formattedLettersGuessed = "";
-			remaining = 13;
+			guessesRemaining = 13;
 			guessedWord = "";
-			if (wins === 0) {
-				currentWord = "outstanding";
-			} else if (wins === 1) {
-				currentWord = "fantastic";
-			} else {
-				currentWord = "extraordinary";
-			}
 			for(var i = 0; i < currentWord.length; i++) {
 				guessedWord = guessedWord.replaceAt(i, "_"); 
 			}
@@ -118,10 +121,9 @@
 	document.onkeyup = function(event) {
 		userInput = String.fromCharCode(event.keyCode).toLowerCase();
 		game.checkGuess();
-		game.checkForWin();
+		game.checkForWinOrLose();
 		game.writeToScreen();
 	}
-	
 
 </script>
 
