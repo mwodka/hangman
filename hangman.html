@@ -5,15 +5,35 @@
 		Hangman
 	</title>
 </head>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    
+<link rel="stylesheet" href="assets/css/style.css">
+
 <body>
 
-<div> Press any key to get started! </div> <br>
-<div id = "wins"> </div> <br>
-<div> current word </div> <br>
-<div id = "word"> </div> <br>
-<div id = "guessesRemaining"> </div> <br>
-<div> Letters already guessed: </div> <br>
-<div id = "lettersguessed"> </div> 
+<div class="jumbotron">
+    <h1><b>Hangman</b></h1>
+    <p>Bootstrap Theme</p>
+</div>    
+
+<div class = "game-content">
+    <div> <b>Press any key to get started! </b></div> <br>
+    <div id = "wins"> </div>
+    <div id = "losses"> </div> <br>
+    <div> current word </div> <br>
+    <div id = "word"> </div> <br>
+    <div id = "guessesRemaining"> </div> <br>
+    <div> Letters already guessed: </div> <br>
+    <div id = "lettersguessed"> </div> 
+</div>
 
 <script type="text/javascript">
 	
@@ -24,6 +44,7 @@
 	var userInput;
 	var guessedWord;
 	var wins = 0;
+    var losses = 0;
 	var wordBank = ['apple', 'orange', 'cherries', 'peaches', 'plums'];
 
 	var game = {
@@ -63,6 +84,7 @@
 		writeToScreen: function() {
 			var formattedGuess = "";
 			document.getElementById("wins").innerHTML = "wins: " + wins;
+            document.getElementById("losses").innerHTML = "losses: " + losses;
 			document.getElementById("guessesRemaining").innerHTML = "guesses remaining: " + guessesRemaining;
 			document.getElementById("lettersguessed").innerHTML = formattedLettersGuessed;
 			for(var i = 0; i < guessedWord.length; i++) {
@@ -85,7 +107,7 @@
 			}
 
 			if (guessesRemaining === 0) {
-				alert("Game Over. Press Close to start a new game.");
+                losses++;
 				this.newGame();
 			}
 
